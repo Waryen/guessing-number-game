@@ -1,35 +1,31 @@
 use std::io;
-use std::cmp::Ordering;
 use rand::Rng;
 use colored::*;
 
 fn main() {
-    let secret_number = rand::thread_rng().gen_range(1..10);
+    let number_to_find = rand::thread_rng()
+        .gen_range(1..100);
     let mut guess = String::new();
 
-    println!("Guess the number! {}", secret_number);
-    println!("Type in a number:");
+    println!("Guess a number:");
+
+    // FIXME programm panick after 2 guess
 
     loop {
         io::stdin()
             .read_line(&mut guess)
-            .expect("Failed to read line");
-    
-        let guess: u32 = match guess.trim()
-            .parse() {
-                Ok(num) => num,
-                Err(_) => continue,
-            };
+            .expect("Failed to read the line");
 
-        println!("You guessed: {}", guess);
+        let guess: i32 = guess.trim()
+            .parse().expect("Type in a number");
 
-        match guess.cmp(&secret_number) {
-            Ordering::Less => println!("{}", "Too small!".red()),
-            Ordering::Greater => println!("{}", "Too big!".red()),
-            Ordering::Equal => {
-                println!("{}", "You win!".green());
-                break;
-            },
+        if guess < number_to_find {
+            println!("{}", "Too small!".red());
+        } else if guess > number_to_find {
+            println!("{}", "Too big!".red());
+        } else {
+            println!("{}", "You win!".green());
+            break;
         }
     }
 }
